@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Flex Skeleton</title>
+	<link href="style.css" rel="stylesheet" type="text/css" />
+
+	<style>
+		body {
+			background-color: rgba(200, 200, 200, 0.625);
+			margin: 0;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			min-height: 80vh;
+		}
+		div {
+			background-color: rgb(243, 243, 243);
+			width: 550px;
+			padding: 50px;
+			border: 0.5px solid rgb(83, 83, 83);
+			border-radius: 8px;
+		}
+	</style>
+</head>
+
+<body>
+	<h2>Sign Up Form!! `v*</h2>
+	<div>
+		<form>
+			Date: <input type = 'date'>
+			Name: <input type="text" placeholder="Your name pls" >
+			Time: <input type="time">
+		</form>
+		<hr>
+		<form>
+			<p>Choose</p>
+			Option 1: <input type="radio" name="option">
+			Option 2: <input type="radio" name="option">
+			Option 3: <input type="radio" name="option">
+			<p>Another one</p>
+			Option A: <input type="checkbox" name="option">
+			Option B: <input type="checkbox" name="option">
+			Option C: <input type="checkbox" name="option">
+
+			<p>Comments</p>
+			<textarea rows="4" cols="75"></textarea>
+
+			<center><input type="submit" value="Submit"></center>
+		</form>
+	</div>
+</body>
+</html>
