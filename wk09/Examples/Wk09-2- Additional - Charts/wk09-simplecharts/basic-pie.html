@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Basic Pie</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js"></script>
+  <!--<script src="chartjs/dist/2.7.1/Chart.bundle.min.js" type="text/javascript"></script>-->
+  <link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css">
+  <!--<script src="chartjs/samples/master/utils.js" type="text/javascript"></script>-->
+</head>
+
+<body>
+  <div style="width:49%;float:left;">
+    <h2>Let's do some charts</h2>
+    <form id="frmAmt">
+      <label for="amount">Amount:
+      <input type="text" name="txtAmt" id="txtAmt">
+
+      <input type="submit" value="Add Amt" id="btnSubmit">
+    </form>
+    <br/><br/><br/>
+    <button id="addDataset">Add Data</button>
+    <button id="lineChart">Change to Line Chart</button>
+    <button id="barChart">Change to Bar Chart</button>
+    <button id="donutChart">Change to Donut Chart</button>
+    <button id="showFirst">Show first 7</button>
+    <button id="showAll">Show All</button>
+  </div>
+  <div style="width:49%;float:left;">
+    <div id="container" class="chart-container" style="position: relative; width:75% ">
+      <canvas id="myChart"></canvas>
+    </div>
+  </div>
+
+  <script>
+    var ctx = document.getElementById("myChart");
+    var last = 26;
+
+    var chartStorageData = "";
+    var chartStorageDataLabels = "";
+    var chartStorageDataset = "";
+
+    var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ["21/11", "22/11", "23/11", "24/11", "25/11", "26/11"],
+        datasets: [{
+          label: 'Expenses',
+          data: [12, 19, 3, 5, 2, 3],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var color = Chart.helpers.color;
+
+      window.chartColors = {
+      red: 'rgb(255, 99, 132)',
+      orange: 'rgb(255, 159, 64)',
+      yellow: 'rgb(255, 205, 86)',
+      green: 'rgb(75, 192, 192)',
+      blue: 'rgb(54, 162, 235)',
+      purple: 'rgb(153, 102, 255)',
+      grey: 'rgb(201, 203, 207)'
+    };
+
+
+      var colorNames = Object.keys(window.chartColors);
+      document.getElementById("addDataset").addEventListener("click", function(e) {
+        e.preventDefault();
+        console.log("type" + myChart.type);
+        console.log("i cam here");
+        var colorName = colorNames[myChart.data.labels.length % colorNames.length];;
+        var dsColor = window.chartColors[colorName];
+        var newDataName = ++last + "/11";
+        var newDataValue = Math.round(Math.random() * 20 + 1);
+        /*
+        var newDataset = {
+          label: 'Dataset ' + myChart.data.datasets.length,
+          backgroundColor: color(dsColor).alpha(0.5).rgbString(),
+          borderColor: dsColor,
+          borderWidth: 1,
+          data: []
+        };
+
+        for (var index = 0; index < myChart.data.labels.length; ++index) {
+          newDataset.data.push(randomScalingFactor());
+        }
+        */
+        console.log("came here twice" + myChart.data.datasets[0].data.length);
+        console.log("came here twice bg" + myChart.data.datasets[0].backgroundColor.length);
+        console.log("came here twice border" + myChart.data.datasets[0].borderColor.length);
+        myChart.data.labels.push(newDataName);
+        myChart.data.datasets[0].data.push(newDataValue);
+        myChart.data.datasets[0].backgroundColor.push(color(dsColor).alpha(0.5).rgbString());
+        myChart.data.datasets[0].borderColor.push(dsColor);
+        console.log("came here twice" + myChart.data.datasets[0].data.length);
+        console.log("came here twice bg" + myChart.data.datasets[0].backgroundColor.length);
+        console.log("came here twice border" + myChart.data.datasets[0].borderColor.length);
+
+        //myChart.data.datasets.push(newDataset);
+        myChart.update();
+      });
+
+
+      document.getElementById("lineChart").addEventListener("click", function(e) {
+        e.preventDefault();
+        var chartData = myChart.data;
+        myChart.destroy();
+        myChart = new Chart(ctx, {
+          type: 'line',
+          data: chartData,
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  // Include a dollar sign in the ticks
+                  callback: function(value, index, values) {
+                    return '$' + value;
+                  }
+                }
+              }]
+            }
+          }
+        });
+        myChart.update();
+      });
+
+
+      document.getElementById("barChart").addEventListener("click", function(e) {
+        e.preventDefault();
+        var chartData = myChart.data;
+        myChart.destroy();
+        myChart = new Chart(ctx, {
+          type: 'bar',
+          data: chartData
+        });
+        myChart.update();
+      });
+
+
+
+      document.getElementById("donutChart").addEventListener("click", function(e) {
+        e.preventDefault();
+        var chartData = myChart.data;
+        myChart.destroy();
+        myChart = new Chart(ctx, {
+          type: 'pie',
+          data: chartData
+        });
+        myChart.update();
+      });
+
+      /* -- experimental-- */
+      document.getElementById("showFirst").addEventListener("click", function(e) {
+        e.preventDefault();
+        chartStorageDataLabels = myChart.data.labels.slice();//store temp
+        chartStorageDataset = myChart.data.datasets.slice();//store temp
+        //myChart.data.datasets[0].data.slice(0,7);
+        //myChart.data.labels.slice(0, 7);
+        myChart.data.datasets[0].data.splice(7);
+        myChart.data.labels.splice(7);
+
+        console.log(myChart.data.datasets[0].data.length);
+        console.log(myChart.data.labels.length);
+        myChart.update();
+        //retrieve only first 7
+
+      });
+
+      document.getElementById("showAll").addEventListener("click", function(e) {
+        e.preventDefault();
+        console.log("show all...");
+
+        myChart.destroy();
+
+        myChart = new Chart(ctx, {
+          type: 'pie',
+          data: chartStorageData
+        });
+        myChart.data.labels = chartStorageDataLabels.slice();//store temp
+        myChart.data.datasets = chartStorageDataset.slice();//store temp
+        myChart.update();
+        //retrieve only first 7
+
+      });
+
+      document.getElementById("btnSubmit").addEventListener("click", function(e) {
+        e.preventDefault();
+        console.log("btn click");
+        var colorName = colorNames[myChart.data.labels.length % colorNames.length];;
+        var dsColor = window.chartColors[colorName];
+        var newDataName = ++last + "/11";
+        console.log("amount" + parseInt($("#txtAmt").val()));
+        var newDataValue = parseInt($("#txtAmt").val());
+        /*
+        var newDataset = {
+          label: 'Dataset ' + myChart.data.datasets.length,
+          backgroundColor: color(dsColor).alpha(0.5).rgbString(),
+          borderColor: dsColor,
+          borderWidth: 1,
+          data: []
+        };
+
+        for (var index = 0; index < myChart.data.labels.length; ++index) {
+          newDataset.data.push(randomScalingFactor());
+        }
+        */
+        myChart.data.labels.push(newDataName);
+        myChart.data.datasets[0].data.push(newDataValue);
+        myChart.data.datasets[0].backgroundColor.push(color(dsColor).alpha(0.5).rgbString());
+        myChart.data.datasets[0].borderColor.push(dsColor);
+        myChart.update();
+      });
+
+    });
+  </script>
+
+
+</body>
+
+</html>
